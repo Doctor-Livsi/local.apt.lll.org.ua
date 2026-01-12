@@ -1,0 +1,32 @@
+.card.card-mt {margin-top: 30px}
+.card.card-primary {
+    border-top: 2px solid var(--primary);
+    border-bottom: 2px solid var(--primary);
+}
+.card.card-secondary {
+    border-top: 2px solid var(--primary);
+    border-bottom: 2px solid var(--primary);
+}
+
+.card.card-success {
+    border-top: 2px solid var(--primary);
+    border-bottom: 2px solid var(--primary);
+}
+.card.card-danger {
+    border-top: 2px solid var(--primary);
+    border-bottom: 2px solid var(--primary);
+}
+.card.card-warning {
+    border-top: 2px solid var(--primary);
+    border-bottom: 2px solid var(--primary);
+}
+.card.card-info {
+    border-top: 2px solid var(--primary);
+    border-bottom: 2px solid var(--primary);
+}
+.card.card-dark {
+    border-top: 2px solid var(--primary);
+    border-bottom: 2px solid var(--primary);
+}
+.card.card-hero .card-header {padding: 40px;background-image: linear-gradient(to bottom, #6777ef, #95a0f4);color: #fff;overflow: hidden;height: auto;min-height: auto;display: block}
+.card.bg-primary .card-header,.card.bg-danger .card-header,.card.bg-success .card-header,.card.bg-info .card-header,.card.bg-dark .card-header,.card.bg-warning .card-header {color: #fff;opacity: 0.9}

@@ -1,0 +1,21 @@
+<?php
+return [
+    'sidebar' => [
+        [
+            'text' => 'Access Control',
+            'icon' => 'la la-lock',
+            'submenu' => [
+                [
+                    'text' => 'Roles',
+                    'route' => 'crud.role.index',
+                    'icon' => 'la la-id-card'
+                ],
+                [
+                    'text' => 'Permissions',
+                    'route' => 'crud.permission.index',
+                    'icon' => 'la la-key'
+                ]
+            ]
+        ]
+    ]
+];

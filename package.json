@@ -1,0 +1,40 @@
+{
+  "private": true,
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview"
+  },
+  "dependencies": {
+    "@popperjs/core": "^2.11.8",
+    "bootstrap": "^5.3.6",
+    "bootstrap-submenu": "^3.0.1",
+    "datatables.net-autofill-dt": "^2.7.0",
+    "datatables.net-buttons": "^3.2.3",
+    "datatables.net-buttons-dt": "^3.2.4",
+    "datatables.net-colreorder-dt": "^2.1.1",
+    "datatables.net-dt": "^2.3.2",
+    "datatables.net-keytable-dt": "^2.12.1",
+    "datatables.net-plugins": "^2.3.0",
+    "datatables.net-responsive": "^3.0.4",
+    "datatables.net-responsive-dt": "^3.0.5",
+    "datatables.net-searchpanes-dt": "^2.3.3",
+    "datatables.net-select-dt": "^3.0.1",
+    "inputmask": "^5.0.9",
+    "jquery": "^3.7.1",
+    "jszip": "^3.10.1",
+    "pdfmake": "^0.2.20",
+    "sass": "^1.89.1"
+  },
+  "devDependencies": {
+    "@tailwindcss/postcss": "^4.1.8",
+    "@vitejs/plugin-vue": "^5.2.3",
+    "autoprefixer": "^10.4.21",
+    "axios": "^1.8.4",
+    "laravel-vite-plugin": "^1.2.0",
+    "postcss": "^8.4.38",
+    "vite": "^6.2.6",
+    "vite-plugin-static-copy": "^3.0.0",
+    "vue": "^3.5.13"
+  }
+}

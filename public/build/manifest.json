@@ -1,0 +1,103 @@
+{
+  "_bootstrap-BWoDjye_.css": {
+    "file": "assets/bootstrap-BWoDjye_.css",
+    "src": "_bootstrap-BWoDjye_.css"
+  },
+  "_bootstrap.esm-CE2ldw4r.js": {
+    "file": "assets/bootstrap.esm-CE2ldw4r.js",
+    "name": "bootstrap.esm",
+    "css": [
+      "assets/bootstrap-BWoDjye_.css"
+    ]
+  },
+  "_jquery-DXDSVNZv.js": {
+    "file": "assets/jquery-DXDSVNZv.js",
+    "name": "jquery"
+  },
+  "_runtime-core.esm-bundler-CO8B_OEo.js": {
+    "file": "assets/runtime-core.esm-bundler-CO8B_OEo.js",
+    "name": "runtime-core.esm-bundler"
+  },
+  "_runtime-dom.esm-bundler-D-ut1sz7.js": {
+    "file": "assets/runtime-dom.esm-bundler-D-ut1sz7.js",
+    "name": "runtime-dom.esm-bundler",
+    "imports": [
+      "_runtime-core.esm-bundler-CO8B_OEo.js"
+    ]
+  },
+  "resources/css/app.css": {
+    "file": "assets/app-C6G_3qQV.css",
+    "src": "resources/css/app.css",
+    "isEntry": true
+  },
+  "resources/img/background/background-world-keyboard.jpg": {
+    "file": "assets/background-world-keyboard-ySQs3SIv.jpg",
+    "src": "resources/img/background/background-world-keyboard.jpg"
+  },
+  "resources/js/app.js": {
+    "file": "assets/app-BAORkGVd.js",
+    "name": "app",
+    "src": "resources/js/app.js",
+    "isEntry": true,
+    "imports": [
+      "_runtime-dom.esm-bundler-D-ut1sz7.js",
+      "_bootstrap.esm-CE2ldw4r.js",
+      "_jquery-DXDSVNZv.js",
+      "_runtime-core.esm-bundler-CO8B_OEo.js"
+    ],
+    "dynamicImports": [
+      "resources/js/pages/Login/LoginPage.vue"
+    ],
+    "css": [
+      "assets/app-CXcYVe9v.css"
+    ],
+    "assets": [
+      "assets/background-world-keyboard-ySQs3SIv.jpg"
+    ]
+  },
+  "resources/js/components/Apteks/ApteksTable.vue": {
+    "file": "assets/ApteksTable-oLYNmt7L.js",
+    "name": "ApteksTable",
+    "src": "resources/js/components/Apteks/ApteksTable.vue",
+    "isEntry": true,
+    "imports": [
+      "_jquery-DXDSVNZv.js",
+      "_runtime-core.esm-bundler-CO8B_OEo.js"
+    ]
+  },
+  "resources/js/pages/Apteks/apteks.js": {
+    "file": "assets/apteks-D5qRbBtM.js",
+    "name": "apteks",
+    "src": "resources/js/pages/Apteks/apteks.js",
+    "isEntry": true,
+    "imports": [
+      "_runtime-dom.esm-bundler-D-ut1sz7.js",
+      "resources/js/components/Apteks/ApteksTable.vue",
+      "_runtime-core.esm-bundler-CO8B_OEo.js",
+      "_jquery-DXDSVNZv.js"
+    ]
+  },
+  "resources/js/pages/Login/LoginPage.vue": {
+    "file": "assets/LoginPage-oKRXbzBt.js",
+    "name": "LoginPage",
+    "src": "resources/js/pages/Login/LoginPage.vue",
+    "isDynamicEntry": true,
+    "imports": [
+      "_bootstrap.esm-CE2ldw4r.js",
+      "_runtime-dom.esm-bundler-D-ut1sz7.js",
+      "_runtime-core.esm-bundler-CO8B_OEo.js"
+    ]
+  },
+  "resources/js/pages/Login/login.js": {
+    "file": "assets/login-Cj3MUpIt.js",
+    "name": "login",
+    "src": "resources/js/pages/Login/login.js",
+    "isEntry": true,
+    "imports": [
+      "_runtime-dom.esm-bundler-D-ut1sz7.js",
+      "resources/js/pages/Login/LoginPage.vue",
+      "_runtime-core.esm-bundler-CO8B_OEo.js",
+      "_bootstrap.esm-CE2ldw4r.js"
+    ]
+  }
+}

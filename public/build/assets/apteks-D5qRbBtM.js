@@ -1,0 +1,1 @@
+import{c as a}from"./runtime-dom.esm-bundler-D-ut1sz7.js";import{_ as o}from"./ApteksTable-oLYNmt7L.js";import"./runtime-core.esm-bundler-CO8B_OEo.js";import"./jquery-DXDSVNZv.js";document.addEventListener("DOMContentLoaded",()=>{const t=document.getElementById("apteks-table-wrapper");if(t){const e=t.dataset.status;a(o,{status:e}).mount(t)}});

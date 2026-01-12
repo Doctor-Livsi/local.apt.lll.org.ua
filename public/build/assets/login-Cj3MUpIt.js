@@ -1,0 +1,1 @@
+import{c as o}from"./runtime-dom.esm-bundler-D-ut1sz7.js";import t from"./LoginPage-oKRXbzBt.js";import"./runtime-core.esm-bundler-CO8B_OEo.js";import"./bootstrap.esm-CE2ldw4r.js";const e=document.getElementById("login");e&&o(t,{csrfToken:document.head.querySelector('meta[name="csrf-token"]').content}).mount(e);
