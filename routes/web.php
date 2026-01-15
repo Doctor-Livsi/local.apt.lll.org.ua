@@ -6,6 +6,7 @@ use App\Http\Controllers\AuthController;
 use App\Http\Controllers\Api\ApteksDataController;
 
 // API маршрут для логіну
+Route::post('/login', [AuthController::class, 'login']);
 Route::post('/api/login', [AuthController::class, 'login']);
 // Вихід
 Route::post('/logout', [AuthController::class, 'logout']);

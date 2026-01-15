@@ -1,11 +1,15 @@
-import { defineConfig, loadEnv } from 'vite';  // 👈 Добавь loadEnv
+import { defineConfig, loadEnv } from 'vite';
 import laravel from 'laravel-vite-plugin';
 import vue from '@vitejs/plugin-vue';
 import path from 'path';
 
-export default defineConfig(({ mode }) => {  // 👈 Функция для mode (dev/prod)
-    // Загружаем .env (mode: 'development'/'production')
-    const env = loadEnv(mode, process.cwd(), '');  // Читает .env, .env.local, .env.development и т.д.
+export default defineConfig(({ mode }) => {
+    const env = loadEnv(mode, process.cwd(), '');
+
+    // 👈 Фоллбек на 127.0.0.1, если VITE_HOST не задан
+    const viteHost = env.VITE_HOST || '127.0.0.1';
+    const vitePort = parseInt(env.VITE_PORT) || 5173;
+    const laravelTarget = env.VITE_LARAVEL_TARGET || 'http://127.0.0.1:8000';  // 👈 Новый env для target
 
     return {
         plugins: [
@@ -22,27 +26,69 @@ export default defineConfig(({ mode }) => {  // 👈 Функция для mode 
             vue(),
         ],
         server: {
-            host: env.VITE_HOST || 'localhost',  // 👈 Из .env, fallback на localhost
-            port: parseInt(env.VITE_PORT) || 5173,  // 👈 Из .env, fallback на дефолт
+            host: viteHost,  // 127.0.0.1 по умолчанию
+            port: vitePort,
             strictPort: true,
             hmr: {
-                host: env.VITE_HMR_HOST || 'localhost',  // 👈 Из .env для HMR
+                host: viteHost,  // 👈 HMR на IP
                 protocol: 'ws',
-                port: parseInt(env.VITE_PORT) || 5173,
+                port: vitePort,
             },
-            cors: true,
+            cors: true,  // Разрешает cross-origin с куки
             allowedHosts: [
-                'apt.dev.local',  // Или динамично: env.VITE_HOST
-                'apt.lll.org.ua',  // Для теста мультидоменов
+                '127.0.0.1',
+                'localhost',
+                'apt.dev.local',  // Для теста домена
+                'apt.lll.org.ua',  // Мультидомен (m/ps/it.lll.org.ua)
             ],
+            proxy: {  // Proxy на 127.0.0.1:8000 для локалки
+                '/api': {
+                    target: laravelTarget,  // http://127.0.0.1:8000
+                    changeOrigin: true,
+                    secure: false,
+                    rewrite: (path) => path.replace(/^\/api/, '/api'),
+                    configure: (proxy, options) => {
+                        proxy.on('proxyReq', (proxyReq, req, res) => {
+                            if (req.headers.cookie) {
+                                proxyReq.setHeader('Cookie', req.headers.cookie);
+                            }
+                        });
+                        proxy.on('proxyRes', (proxyRes, req, res) => {
+                            const setCookie = proxyRes.headers['set-cookie'];
+                            if (setCookie) {
+                                res.setHeader('Set-Cookie', setCookie);
+                            }
+                        });
+                    },
+                },
+                '/sanctum': {
+                    target: laravelTarget,
+                    changeOrigin: true,
+                    secure: false,
+                    configure: (proxy, options) => {
+                        proxy.on('proxyReq', (proxyReq, req, res) => {
+                            if (req.headers.cookie) {
+                                proxyReq.setHeader('Cookie', req.headers.cookie);
+                            }
+                        });
+                        proxy.on('proxyRes', (proxyRes, req, res) => {
+                            const setCookie = proxyRes.headers['set-cookie'];
+                            if (setCookie) {
+                                res.setHeader('Set-Cookie', setCookie);
+                            }
+                        });
+                    },
+                },
+            },
         },
         resolve: {
             alias: {
                 '@': path.resolve(__dirname, 'resources/js'),
             },
         },
-        define: {  // 👈 Опционально: подставь в глобальный JS (для Vue/Acorn)
-            __VITE_APP_URL__: JSON.stringify(env.VITE_APP_URL),
+        define: {
+            __VITE_APP_URL__: JSON.stringify(env.VITE_APP_URL || 'http://127.0.0.1:5173'),  // Фоллбек на IP
+            __VITE_API_BASE__: JSON.stringify(env.VITE_API_BASE || '/api'),
         },
     };
 });

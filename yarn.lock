@@ -356,10 +356,10 @@ bootstrap-submenu@^3.0.1:
   resolved "https://registry.npmmirror.com/bootstrap-submenu/-/bootstrap-submenu-3.0.1.tgz"
   integrity sha512-n7uXhiTuCptXMaSyTh5mki6jmVeA/WDE0EKRb+YZyxrMrVI/oEz9wlMmRGGJ2+mtFr4FYoEPvPOf5v75VZ/1Bg==
 
-bootstrap@^5.3.6:
-  version "5.3.7"
-  resolved "https://registry.npmmirror.com/bootstrap/-/bootstrap-5.3.7.tgz"
-  integrity sha512-7KgiD8UHjfcPBHEpDNg+zGz8L3LqR3GVwqZiBRFX04a1BCArZOz1r2kjly2HQ0WokqTO0v1nF+QAt8dsW4lKlw==
+bootstrap@^5.3.8:
+  version "5.3.8"
+  resolved "https://registry.npmjs.org/bootstrap/-/bootstrap-5.3.8.tgz"
+  integrity sha512-HP1SZDqaLDPwsNiqRqi5NcP0SSXciX2s9E+RyqJIIqGo+vJeN5AJVM98CXmW/Wux0nQ5L7jeWUdplCEf0Ee+tg==
 
 braces@^3.0.3, braces@~3.0.2:
   version "3.0.3"

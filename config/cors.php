@@ -18,7 +18,10 @@ return [
     'paths' => ['api/*', 'sanctum/csrf-cookie', 'login', 'logout'],
     'allowed_methods' => ['*'],
 //    'allowed_origins' => ['*'],
-    'allowed_origins' => ['http://acorn-starter-project.local:5174'],
+    'allowed_origins' => array_map(
+        'trim',
+        explode(',', env('CORS_ALLOWED_ORIGINS', ''))
+    ),
     'allowed_origins_patterns' => [],
     'allowed_headers' => ['*'],
     'exposed_headers' => [],

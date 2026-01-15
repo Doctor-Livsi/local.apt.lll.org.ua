@@ -12,6 +12,7 @@
                     type="email"
                     class="form-control"
                     placeholder="Email"
+                    autocomplete="username"
                     required
                 />
                 <div v-if="errors.email.length" class="text-danger">{{ errors.email[0] }}</div>
@@ -24,6 +25,7 @@
                     type="password"
                     class="form-control pe-7"
                     placeholder="Password"
+                    autocomplete="current-password"
                     required
                 />
                 <div v-if="errors.password.length" class="text-danger">{{ errors.password[0] }}</div>
@@ -41,9 +43,7 @@ import 'bootstrap'
 
 export default {
     name: 'LoginForm',
-    props: {
-        // Убрал csrfToken — теперь фетчим динамически
-    },
+
     data() {
         return {
             form: {
@@ -59,7 +59,17 @@ export default {
             loading: false,
         };
     },
+
     methods: {
+        getCookie(name) {
+            const value = `; ${document.cookie}`;
+            const parts = value.split(`; ${name}=`);
+            if (parts.length === 2) {
+                return parts.pop().split(';').shift();
+            }
+            return null;
+        },
+
         async submitForm() {
             this.errors = { message: '', email: [], password: [] };
             this.loading = true;
@@ -69,6 +79,7 @@ export default {
                 this.loading = false;
                 return;
             }
+
             if (!this.form.password) {
                 this.errors.password = ['Пароль обов’язковий.'];
                 this.loading = false;
@@ -76,70 +87,73 @@ export default {
             }
 
             try {
-                // Шаг 1: Фетч CSRF-куки (set XSRF-TOKEN и laravel_session, если нужно)
-                console.log('Фетч /sanctum/csrf-cookie...');
-                await fetch('/sanctum/csrf-cookie', {
-                    method: 'GET',
-                    credentials: 'include',  // Куки
-                });
-                console.log('CSRF-куки set');
+                console.log('Поточні куки ДО csrf:', document.cookie);
 
-                const redirectPath = window.location.pathname + window.location.search;
+                // 1️⃣ Получаем CSRF-cookie
+                await fetch('/sanctum/csrf-cookie', {
+                    credentials: 'include',
+                });
+
+                console.log('Куки ПІСЛЯ csrf:', document.cookie);
+
+                // 2️⃣ Достаём XSRF-TOKEN и ДЕКОДИРУЕМ
+                const rawToken = this.getCookie('XSRF-TOKEN');
+
+                if (!rawToken) {
+                    throw new Error('XSRF-TOKEN не знайдено в cookie');
+                }
+
+                const xsrfToken = decodeURIComponent(rawToken);
+                console.log('XSRF-TOKEN (decoded):', xsrfToken);
+
                 const requestData = {
-                    ...this.form,
-                    redirect: redirectPath,
+                    email: this.form.email,
+                    password: this.form.password,
+                    remember: this.form.remember,
+                    redirect: window.location.pathname + window.location.search,
                 };
 
-                console.log('Дані для /api/login:', JSON.stringify(requestData));
-
-                // Шаг 2: POST на логин
-                const response = await fetch('/api/login', {
+                // 3️⃣ ЛОГИН ЧЕРЕЗ /login (НЕ /api/login)
+                const response = await fetch('/login', {
                     method: 'POST',
+                    credentials: 'include',
                     headers: {
                         'Accept': 'application/json',
                         'Content-Type': 'application/json',
-                        // X-CSRF-TOKEN берётся из куки автоматически (fetch + credentials)
+                        'X-XSRF-TOKEN': xsrfToken,
                     },
                     body: JSON.stringify(requestData),
-                    credentials: 'include',  // Передаёт/получает куки (laravel_session)
                 });
 
-                const data = await response.json();
+                console.log('HTTP status:', response.status);
 
-                console.log('Response от /api/login:', data);
+                const data = await response.json();
+                console.log('Response data:', data);
 
                 if (response.status === 419) {
                     this.errors.message = 'Сторінка застаріла. Оновіть і спробуйте знову.';
                     return;
                 }
 
-                if (!data.success) {
-                    this.errors = {
-                        message: data.message || 'Помилка входу',
-                        email: data.errors?.email || [],
-                        password: data.errors?.password || [],
-                    };
+                if (!response.ok || !data.success) {
+                    this.errors.message = data.message || 'Помилка входу';
+                    this.errors.email = data.errors?.email || [];
+                    this.errors.password = data.errors?.password || [];
                     return;
                 }
 
-                // Шаг 3: После успеха — set Bearer-токен для API (если возвращается)
+                // 4️⃣ Сохраняем Bearer-токен (если используешь)
                 if (data.token) {
-                    localStorage.setItem('auth_token', data.token);  // Или в axios.defaults
-                    // Если используешь axios глобально:
-                    // axios.defaults.headers.common['Authorization'] = `Bearer ${data.token}`;
-                    console.log('Bearer-токен збережено:', data.token);
+                    localStorage.setItem('auth_token', data.token);
+                    console.log('Bearer-токен збережено');
                 }
 
-                // Шаг 4: Редирект — используй router, если есть (в App.vue или router/index.js)
+                // 5️⃣ Редирект
                 const redirectUrl = data.redirect || '/';
-                if (this.$router) {
-                    this.$router.push(redirectUrl);  // SPA-редирект, сессия держится
-                } else {
-                    window.location.href = redirectUrl;  // Fallback
-                }
+                window.location.href = redirectUrl;
 
             } catch (error) {
-                console.error('Помилка в submitForm:', error);
+                console.error('Помилка submitForm:', error);
                 this.errors.message = error.message || 'Невідома помилка';
             } finally {
                 this.loading = false;
@@ -147,4 +161,5 @@ export default {
         },
     },
 };
+
 </script>
