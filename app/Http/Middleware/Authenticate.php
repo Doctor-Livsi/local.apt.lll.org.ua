@@ -12,11 +12,12 @@ class Authenticate extends Middleware
     {
         if (!$request->expectsJson()) {
             Log::info('Перевірка авторизації', [
-                'auth_check' => Auth::check(),
-                'user' => Auth::user(),
+                'auth_check_web' => Auth::guard('web')->check(),
+                'user_web' => Auth::guard('web')->user(),
                 'session_id' => $request->session()->getId(),
                 'laravel_session' => $request->cookie('laravel_session'),
             ]);
+
             return route('login');
         }
     }

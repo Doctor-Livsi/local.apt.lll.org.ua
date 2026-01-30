@@ -1,51 +1,42 @@
 <?php
-
+// routes/web.php
 use Illuminate\Support\Facades\Route;
 use Illuminate\Http\Request;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\Api\ApteksDataController;
 
-// API маршрут для логіну
-Route::post('/login', [AuthController::class, 'login']);
-Route::post('/api/login', [AuthController::class, 'login']);
-// Вихід
-Route::post('/logout', [AuthController::class, 'logout']);
+Route::get('/login', [AuthController::class, 'showLoginForm'])->name('login');
+Route::post('/login', [AuthController::class, 'loginWeb'])
+    ->middleware(['web'])
+    ->name('login.web');
+Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
 
+Route::middleware('auth')->group(function () {
+    Route::get('/', function () {
+        return view('home');
+    })->name('home');
 
-// Головна сторінка
-Route::view('/', 'horizontal')->name('home')->middleware('auth');
-
-// Сторінка логіну (без middleware, щоб була доступна)
-Route::get('/login', function () {
-    return view('auth.login');
-})->name('login');
-
-// Перенаправлення GET-запитів на /login
-Route::get('/api/login', function () {
-    return redirect()->route('login');
+    require __DIR__ . '/web/apteks.php'; //маршруты для раздела apteks
+    require __DIR__ . '/web/providers.php'; //маршруты для раздела providers
+    require __DIR__ . '/web/technics.php'; //маршруты для раздела technics
 });
 
+Route::get('/__auth_debug', function (Request $request) {
+    $sid = $request->session()->getId();
 
-Route::middleware('auth')->prefix('api')->group(function () {
-    Route::get('/regions/{status}', [ApteksDataController::class, 'getRegions']);
-    Route::get('/towns/{status}', [ApteksDataController::class, 'getTowns']);
-    Route::post('/apteks/{status}/data', [ApteksDataController::class, 'getData']);
+    $row = null;
+    try {
+        $row = DB::table('sessions')->where('id', $sid)->first();
+    } catch (\Throwable $e) {}
+
+    return response()->json([
+        'url' => $request->fullUrl(),
+        'auth_check' => Auth::check(),
+        'user_id' => Auth::id(),
+        'session_id' => $sid,
+        'cookie_laravel_session_present' => (bool) $request->cookie('laravel_session'),
+        'db_session_row_found' => (bool) $row,
+        'db_user_id' => $row->user_id ?? null,
+        'db_last_activity' => $row->last_activity ?? null,
+    ]);
 });
-
-//Route::middleware('auth')
-//    ->post('/api/apteks/{status}/data', [ApteksDataController::class, 'getData']);
-
-//Route::middleware('auth')->group(function () {
-    require __DIR__ . '/web/apteks.php';
-    require __DIR__ . '/web/providers.php';
-    require __DIR__ . '/web/technics.php';
-//});
-
-/*
-|--------------------------------------------------------------------------
-| Pages
-|--------------------------------------------------------------------------
-|
-*/
-Route::view('/Horizontal', 'horizontal')->name('horizontal')->middleware('auth');
-Route::view('/Vertical', 'vertical')->name('vertical')->middleware('auth');

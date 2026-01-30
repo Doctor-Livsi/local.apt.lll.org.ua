@@ -18,7 +18,8 @@ class AuthController extends Controller
     {
         $ipAddress = $request->ip();
         $userAgent = $request->userAgent();
-        $method = $request->is('api/*') ? 'api' : 'web';
+        $method = 'web';
+//        $method = $request->is('api/*') ? 'api' : 'web';
         $email = $request->input('email');
 
         Carbon::setLocale('uk');
@@ -164,7 +165,11 @@ class AuthController extends Controller
             ], 200);
         }
 
-        Auth::guard('web')->login($user);
+        Auth::shouldUse('web');
+        Auth::login($user);
+
+        $request->session()->regenerate();
+        $request->session()->save();
         $token = $user->createToken('auth-token')->plainTextToken;
 
         Log::info('Користувач авторизований', [
@@ -216,4 +221,94 @@ class AuthController extends Controller
         return redirect('/login');
 //        return response()->json(['success' => true]);
     }
+    public function loginWeb(Request $request)
+    {
+        // ВАЖНО: это web endpoint, но возвращаем тот же JSON, который у тебя уже работает
+        return $this->login($request);
+    }
+
+    public function loginApi(Request $request)
+    {
+        $ipAddress = $request->ip();
+        $userAgent = $request->userAgent();
+        $email = $request->input('email');
+
+        Carbon::setLocale('uk');
+
+        // Блокировки (то же, что в login())
+        $currentTime = now();
+        $block = DB::table('block_logs')
+            ->where('blocked_until', '>', $currentTime)
+            ->where(function ($query) use ($ipAddress, $email) {
+                $query->where('type', 'ip')->where('value', $ipAddress)
+                    ->orWhere('type', 'email')->where('value', $email);
+            })
+            ->first();
+
+        if ($block) {
+            $blockedUntilFormatted = Carbon::parse($block->blocked_until)->translatedFormat('H:i:s d F Y');
+            return response()->json([
+                'success' => false,
+                'message' => "Доступ заблоковано до {$blockedUntilFormatted}",
+            ], 200);
+        }
+
+        // Валидация
+        try {
+            $request->validate([
+                'email' => 'required|email',
+                'password' => 'required',
+            ]);
+        } catch (ValidationException $e) {
+            DB::table('login_attempts')->insert([
+                'email' => $email,
+                'ip_address' => $ipAddress,
+                'user_agent' => $userAgent,
+                'method' => 'api',
+                'success' => false,
+                'created_at' => now(),
+            ]);
+
+            return response()->json([
+                'success' => false,
+                'message' => 'Помилка валідації',
+                'errors' => $e->errors(),
+            ], 422);
+        }
+
+        // Проверка пользователя/пароля
+        $user = Users::where('email', $request->email)->first();
+        $success = $user && Hash::check($request->password, $user->password);
+
+        DB::table('login_attempts')->insert([
+            'email' => $email,
+            'ip_address' => $ipAddress,
+            'user_agent' => $userAgent,
+            'method' => 'api',
+            'success' => $success,
+            'created_at' => now(),
+        ]);
+
+        if (!$success) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Невірний email або пароль.',
+            ], 200);
+        }
+
+        // Только токен. Сессию не трогаем.
+        $token = $user->createToken('auth-token')->plainTextToken;
+
+        return response()->json([
+            'success' => true,
+            'user' => $user,
+            'token' => $token,
+        ], 200);
+    }
+
+    public function showLoginForm()
+    {
+        return view('auth.login');
+    }
+
 }

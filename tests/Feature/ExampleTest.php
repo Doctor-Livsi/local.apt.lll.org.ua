@@ -14,7 +14,7 @@ class ExampleTest extends TestCase
      */
     public function test_example()
     {
-        $response = $this->get('apt.lll.org.ua');
+        $response = $this->get('m.lll.org.ua');
 
         $response->assertStatus(200);
     }

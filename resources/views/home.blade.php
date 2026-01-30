@@ -1,31 +1,11 @@
 @php
     $html_tag_data = ["override"=>'{ "attributes" : { "placement" : "horizontal", "layout":"fluid" }, "storagePrefix" : "starter-project", "showSettings" : true }'];
-    $title = 'Аптеки ' . $status;
+    $title = 'Главная';
     $description= 'An empty page with a boxed horizontal layout.';
-    $breadcrumbs = ["/" => "Home"];
+    $breadcrumbs = ["/" => "Главная"];
 @endphp
 
 @extends('_layout', ['html_tag_data' => $html_tag_data, 'title' => $title, 'description' => $description])
-
-@section('css')
-    {{-- Tailwind (через Vite) --}}
-    {{--    @vite(['resources/css/app.css'])--}}
-@endsection
-
-@section('js_page')
-    <script src="/js/pages/logout.js"></script>
-    @vite(['resources/js/app.js'])
-    @vite(['resources/js/pages/Apteks/apteks.js'])
-@endsection
-@section('js_vendor')
-    @vite(['resources/js/pages/Apteks/apteks.js'])
-    <script src="{{ asset('js/vendor/mousetrap.min.js') }}"></script>
-@endsection
-
-@section('js_page')
-    @vite(['resources/js/app.js'])
-    @vite(['resources/js/pages/Apteks/apteks.js'])
-@endsection
 
 @section('content')
     <div class="container">
@@ -41,11 +21,10 @@
             </div>
         </div>
         <!-- Title and Top Buttons End -->
-
-
-        {{-- Vue компонент з виводом аптек --}}
-{{--                {{ $status }}--}}
-        <div id="apteks-table-wrapper" data-status="{{ $status }}"></div>
-
     </div>
+@endsection
+
+@section('content')
+    <h1>Главная</h1>
+    <p>Новости/объявления будут здесь.</p>
 @endsection
