@@ -21,6 +21,8 @@
     setTimeout(() => {
       document.documentElement.setAttribute('data-show', 'true');
       document.body.classList.remove('spinner');
+      document.getElementById('app-preloader')?.remove();
+
       this._initBase();
       this._initCommon();
       this._initPages();

@@ -15,10 +15,14 @@ import 'datatables.net-keytable-dt/css/keyTable.dataTables.css'
 import 'datatables.net-colreorder-dt/css/colReorder.dataTables.css'
 import 'datatables.net-searchpanes-dt/css/searchPanes.dataTables.css'
 
-import '../css/custom.css';
+
 import '../css/styles.css';
+import '../css/custom.css';
 import '../css/main.css';
 
+import './echo';
+
+// import '../css/custom/acorn-datatables.css'
 import $ from 'jquery';
 
 // Робимо jQuery глобально доступним
@@ -30,4 +34,19 @@ if (loginEl) {
     import('./pages/Login/LoginPage.vue').then(({ default: LoginPage }) => {
         createApp(LoginPage).mount(loginEl);
     });
+}
+const apteksCounterEl = document.getElementById('apteksCounterWidget');
+if (apteksCounterEl) {
+    import('./components/Widget/ApteksCounterConnected.vue').then(({ default: ApteksCounter }) => {
+        createApp(ApteksCounter).mount(apteksCounterEl);
+    });
+}
+
+const apteksChatBotWidgetEl = document.getElementById('apteksCounterChatBotWidget');
+if (apteksChatBotWidgetEl) {
+    import('./components/Widget/ApteksCounterChatBotWidget.vue').then(
+        ({ default: ApteksCounterChatBotWidget }) => {
+            createApp(ApteksCounterChatBotWidget).mount(apteksChatBotWidgetEl);
+        }
+    );
 }

@@ -9,7 +9,8 @@ class Scripts {
         setTimeout(( () => {
                 document.documentElement.setAttribute("data-show", "true"),
                     document.body.classList.remove("spinner"),
-                    this._initBase(),
+                    document.getElementById('app-preloader')?.remove(),
+                this._initBase(),
                     this._initCommon(),
                     this._initIcons(),
                     this._initComponents(),

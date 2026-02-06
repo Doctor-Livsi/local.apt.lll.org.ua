@@ -7,9 +7,25 @@ use App\Models\Apteks\Apteks;
 
 class ApteksController extends Controller
 {
-    public function showStatusPage($status = 'working')
+    public function showStatusPage(string $status)
     {
-        return view("apteks.status", ['status' => $status]);
+        // Відповідність статусу до Blade-шаблону
+        $views = [
+            'working'   => 'apteks.status.working',
+            'projected' => 'apteks.status.projected',
+            'closed'    => 'apteks.status.closed',
+            'connected' => 'apteks.status.connected',
+        ];
+
+        // На випадок некоректного статусу (хоча whereIn вже фільтрує)
+        if (!isset($views[$status])) {
+            abort(404);
+        }
+
+        return view($views[$status], [
+            'status'  => $status,
+            'variant' => $status, // зручно для Vue preset
+        ]);
     }
 
     public function index()

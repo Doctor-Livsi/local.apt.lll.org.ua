@@ -30,3 +30,14 @@
 }
 .card.card-hero .card-header {padding: 40px;background-image: linear-gradient(to bottom, #6777ef, #95a0f4);color: #fff;overflow: hidden;height: auto;min-height: auto;display: block}
 .card.bg-primary .card-header,.card.bg-danger .card-header,.card.bg-success .card-header,.card.bg-info .card-header,.card.bg-dark .card-header,.card.bg-warning .card-header {color: #fff;opacity: 0.9}
+
+.fixed-background-logon {
+    background:
+        url("../images/background/background.png")
+        center / cover
+        fixed
+        no-repeat #f5f7fa;
+
+    position: fixed;
+    inset: 0;
+}

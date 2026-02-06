@@ -1,39 +1,30 @@
 <template>
-  <div class="h-100">
-    <!-- Background -->
-    <div class="fixed-background"></div>
+    <div class="h-100">
+        <div class="fixed-background-logon"></div>
 
-    <div class="container-fluid p-0 min-h-100 position-relative">
-      <div class="row g-0 h-100">
-        <!-- Left Side -->
-        <div class="offset-0 col-12 d-none d-lg-flex offset-md-1 col-lg h-lg-100">
-          <div class="min-h-100 d-flex align-items-center">
-            <div class="w-100 w-lg-75 w-xxl-50">
+        <div class="container-fluid p-0 vh-100 position-relative">
+            <div class="row g-0 h-100">
+                <!-- Ліва частина -->
+                <div class="d-none d-lg-flex col-lg-7 offset-xl-1 align-items-center">
+                    <div class="w-100 w-lg-75 w-xxl-50">
+                        <!-- Ліва частина container -->
+                    </div>
+                </div>
+
+                <!-- Права частина: ТЕПЕР це bootstrap-колонка -->
+                <div class="col-12 col-lg d-flex flex-column justify-content-center align-items-end py-5 full-page-content-right-border px-4 full-page-content-right-border ">
+                    <div class="bg-foreground shadow-deep py-5 px-4 px-lg-5 w-100" style="max-width: 480px; min-height: 380px;">
+                        <div class="mb-5 text-lg-start">
+                            <h2 class="cta-1 mb-1 text-primary">Ласкаво просимо</h2>
+                        </div>
+                        <login-form :csrf-token="csrfToken" />
+                    </div>
+                </div>
             </div>
-          </div>
         </div>
-        <!-- Right Side -->
-        <div class="col-12 col-lg-auto h-100 pb-4 px-4 pt-0 p-lg-0">
-          <div class="sw-lg-70 min-h-100 bg-foreground d-flex justify-content-center align-items-center shadow-deep py-5 full-page-content-right-border">
-            <div class="sw-lg-50 px-5">
-              <div class="mb-5">
-                <h2 class="cta-1 mb-0 text-primary">Ласкаво просимо,</h2>
-                <h2 class="cta-1 text-primary">Давайте почнемо!</h2>
-              </div>
-              <div class="mb-5">
-                <p class="h6">Будь ласка,</p>
-                <p class="h6">Використовуйте свої облікові дані для входу.</p>
-              </div>
-              <div>
-                <login-form :csrf-token="csrfToken"></login-form>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
     </div>
-  </div>
 </template>
+
 
 <script>
 import LoginForm from '../../components/Login/LoginForm.vue';

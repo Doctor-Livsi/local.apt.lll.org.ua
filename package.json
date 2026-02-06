@@ -23,7 +23,9 @@
     "inputmask": "^5.0.9",
     "jquery": "^3.7.1",
     "jszip": "^3.10.1",
+    "laravel-echo": "^2.3.0",
     "pdfmake": "^0.2.20",
+    "pusher-js": "^8.4.0",
     "sass": "^1.89.1"
   },
   "devDependencies": {

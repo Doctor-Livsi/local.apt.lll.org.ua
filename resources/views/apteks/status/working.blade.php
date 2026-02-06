@@ -1,8 +1,8 @@
 @php
     $html_tag_data = ["override"=>'{ "attributes" : { "placement" : "horizontal", "layout":"fluid" }, "storagePrefix" : "starter-project", "showSettings" : true }'];
-    $title = 'Аптеки ' . $status;
+    $title = 'Діючі аптеки';
     $description= 'An empty page with a boxed horizontal layout.';
-    $breadcrumbs = ["/" => "Home"];
+    $breadcrumbs = ["/" => "Home","/apteks" =>"Аптеки","/apteks/$status" =>"$title" ];
 @endphp
 
 @extends('_layout', ['html_tag_data' => $html_tag_data, 'title' => $title, 'description' => $description])
@@ -17,14 +17,10 @@
     @vite(['resources/js/app.js'])
     @vite(['resources/js/pages/Apteks/apteks.js'])
 @endsection
+
 @section('js_vendor')
     @vite(['resources/js/pages/Apteks/apteks.js'])
     <script src="{{ asset('js/vendor/mousetrap.min.js') }}"></script>
-@endsection
-
-@section('js_page')
-    @vite(['resources/js/app.js'])
-    @vite(['resources/js/pages/Apteks/apteks.js'])
 @endsection
 
 @section('content')
@@ -40,12 +36,28 @@
                 <!-- Title End -->
             </div>
         </div>
-        <!-- Title and Top Buttons End -->
+        {{-- Vue компонент з виводом лічильників --}}
+        <div class="row mb-5">
 
+            <div class="col-12 col-lg-6">
+                <div id="apteksCounterWidget"></div>
+            </div>
+            <div class="col-12 col-lg-6">
+                <div id="apteksCounterChatBotWidget"></div>
+            </div>
+        </div>
 
         {{-- Vue компонент з виводом аптек --}}
-{{--                {{ $status }}--}}
-        <div id="apteks-table-wrapper" data-status="{{ $status }}"></div>
-
+        <!-- Content Start -->
+        <div class="container">
+            <div class="card mb-2 card-success">
+                <div class="card-body h-100">
+                    <div id="apteks-table-wrapper"
+                         data-status="{{ $status }}"
+                         data-variant="{{ $status }}">
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
 @endsection

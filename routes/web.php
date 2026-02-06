@@ -11,14 +11,21 @@ Route::post('/login', [AuthController::class, 'loginWeb'])
     ->name('login.web');
 Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
 
-Route::middleware('auth')->group(function () {
-    Route::get('/', function () {
+//Route::middleware('auth')->group(function () {
+//    Route::get('/', function () {
+//        return view('home');
+//    })->name('home');
+Route::get(
+    '/', function () {
         return view('home');
-    })->name('home');
-
+        })->name('home');
     require __DIR__ . '/web/apteks.php'; //маршруты для раздела apteks
     require __DIR__ . '/web/providers.php'; //маршруты для раздела providers
     require __DIR__ . '/web/technics.php'; //маршруты для раздела technics
+//});
+
+Route::get('/dev/ws-counter', function () {
+    return view('dev.ws-counter');
 });
 
 Route::get('/__auth_debug', function (Request $request) {

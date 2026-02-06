@@ -13,10 +13,34 @@
     <title>{{$title}}</title>
     <meta name="description" content="{{$description}}"/>
     <meta name="csrf-token" content="{{ csrf_token() }}">
+    <style>
+        /* Пока data-show не true — скрываем всё */
+        html:not([data-show="true"]) body { visibility: hidden !important; }
+
+        /* Но прелоадер видим */
+        html:not([data-show="true"]) #app-preloader { visibility: visible !important; }
+
+        #app-preloader{
+            position: fixed;
+            inset: 0;
+            z-index: 2147483647;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: #fff;
+            visibility: visible !important;
+        }
+    </style>
+
     @include('_layout.head')
 </head>
 
 <body>
+<div id="app-preloader">
+    <div class="spinner-border text-primary" role="status">
+{{--        <span class="visually-hidden">Loading...</span>--}}
+    </div>
+</div>
 <div id="app">
     <div id="root">
         <div id="nav" class="nav-container d-flex" @isset($custom_nav_data) @foreach ($custom_nav_data as $key=> $value)

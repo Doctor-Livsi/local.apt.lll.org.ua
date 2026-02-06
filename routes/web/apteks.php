@@ -2,7 +2,7 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\ApteksController;
-use App\Http\Controllers\ApteksDataController;
+use App\Http\Controllers\Api\ApteksDataController;
 
 /*
 |--------------------------------------------------------------------------
@@ -54,7 +54,7 @@ Route::middleware(['web', 'auth'])
     ->group(function () {
 
         // DataTables server-side: отримання даних за статусом
-        Route::match(['GET', 'POST'], '/status/{status}', [ApteksDataController::class, 'getApteksStatusData'])
+        Route::match(['GET', 'POST'], '/status/{status}', [ApteksDataController::class, 'getDataStatus'])
             ->whereIn('status', ['working', 'projected', 'closed', 'connected'])
             ->name('datatable');
 
