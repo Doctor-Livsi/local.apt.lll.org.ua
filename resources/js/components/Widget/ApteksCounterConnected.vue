@@ -24,15 +24,18 @@ const channelName = 'apteks.counter'
 const rows = computed(() => {
     const c = counter.value || {}
 
-    const safe = v => Number.isFinite(Number(v)) ? Number(v) : 0
+    const safe = (v) => {
+        const n = Number(v)
+        return Number.isFinite(n) ? n : 0
+    }
 
     const over3h = safe(c.disconnected_lvl3) + safe(c.disconnected_max)
 
     return [
-        { label: 'До 30 хв',    value: safe(c.disconnected_min)  },
-        { label: 'До 1 год',    value: safe(c.disconnected_lvl1) },
-        { label: 'До 3 год',    value: safe(c.disconnected_lvl2) },
-        { label: 'Понад 3 год', value: over3h                    },
+        { label: 'До 30 хв', value: safe(c.disconnected_min) },
+        { label: 'До 1 год', value: safe(c.disconnected_lvl1) },
+        { label: 'До 3 год', value: safe(c.disconnected_lvl2) },
+        { label: 'Понад 3 год', value: over3h },
     ]
 })
 
