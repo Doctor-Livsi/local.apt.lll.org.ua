@@ -15,10 +15,11 @@
 @section('js_page')
     <script src="/js/pages/logout.js"></script>
     @vite(['resources/js/app.js'])
-    @vite(['resources/js/pages/Apteks/apteks.js'])
+{{--    @vite(['resources/js/pages/apteks/apteks.js'])--}}
 @endsection
+
 @section('js_vendor')
-    @vite(['resources/js/pages/Apteks/apteks.js'])
+    @vite(['resources/js/pages/apteks/apteks.js'])
     <script src="{{ asset('js/vendor/mousetrap.min.js') }}"></script>
 @endsection
 

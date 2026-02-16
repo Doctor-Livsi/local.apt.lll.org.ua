@@ -13,6 +13,11 @@ use Illuminate\Support\Facades\Broadcast;
 |
 */
 
-Broadcast::channel('App.Models.User.{id}', function ($user, $id) {
-    return (int) $user->id === (int) $id;
+//Broadcast::channel('App.Models.User.{id}', function ($user, $id) {
+//    return (int) $user->id === (int) $id;
+//});
+
+Broadcast::channel('apteks.{aptekaId}.employees', function ($user, int $aptekaId) {
+    // TODO: тут можна додати перевірку доступу користувача до аптеки (якщо потрібно)
+    return $user !== null;
 });

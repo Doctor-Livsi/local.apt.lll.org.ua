@@ -2,7 +2,7 @@
 
 namespace App\Console\Commands;
 
-use App\Events\ChatBotStatsUpdated;
+use App\Events\ApteksChatBotStatsUpdated;
 use Illuminate\Console\Command;
 
 class WsPushChatBotStats extends Command
@@ -25,7 +25,7 @@ class WsPushChatBotStats extends Command
             'updated_at' => now()->toDateTimeString(),
         ];
 
-        broadcast(new ChatBotStatsUpdated($payload));
+        broadcast(new ApteksChatBotStatsUpdated($payload));
 
         $this->info('Надіслано: ' . json_encode($payload, JSON_UNESCAPED_UNICODE));
         return self::SUCCESS;

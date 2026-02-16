@@ -188,7 +188,7 @@ class AuthController extends Controller
             'success' => true,
             'user' => $user,
             'token' => $token,
-            'redirect' => $redirect,
+            'redirect' => redirect()->intended('/')->getTargetUrl(),
         ], 200);
     }
 

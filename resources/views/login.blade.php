@@ -39,7 +39,7 @@
     <link rel="stylesheet" href="/css/styles.css">
     <link rel="stylesheet" href="/css/main.css">
     <!-- Template Base Styles End -->
-    @vite(['resources/js/pages/Login/login.js'])
+    @vite(['resources/js/pages/login/login.js'])
     <script src="/js/pages/logout.js"></script>
 </head>
 <body class="h-100" data-bs-padding="0px">

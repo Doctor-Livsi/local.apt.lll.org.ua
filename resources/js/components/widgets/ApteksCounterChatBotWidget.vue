@@ -2,6 +2,7 @@
 import { ref, computed, onMounted, onBeforeUnmount } from 'vue'
 import axios from 'axios'
 
+
 /**
  * Назва WebSocket-каналу для статистики ChatBot
  */
@@ -111,26 +112,21 @@ onBeforeUnmount(() => {
 </script>
 
 <template>
-    <div class="card w-100 h-100 shadow-sm card-success">
+    <h2 class="small-title text-uppercase"><b>ChatBot · Завдання</b></h2>
+    <div class="card h-100 card-primary mb-5">
         <div class="card-body">
-            <div class="d-flex align-items-center justify-content-between mb-3">
-                <div>
-                    <div class="fw-semibold text-primary">ChatBot · Завдання</div>
-                </div>
-            </div>
-
             <div v-if="loading" class="text-muted">
                 Завантаження…
             </div>
 
-            <div v-else-if="error" class="alert alert-danger py-2 mb-0">
+            <div v-else-if="error" class="alert alert-danger mb-0">
                 <div class="fw-semibold">Помилка</div>
                 <div class="small">{{ error }}</div>
             </div>
 
             <div v-else>
                 <div class="table-responsive">
-                    <table class="table table-sm align-middle mb-2">
+                    <table class="table table-sm align-middle mb-0 h5">
                         <tbody>
                         <tr v-for="r in rows" :key="r.label">
                             <td class="text-primary">{{ r.label }}</td>

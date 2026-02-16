@@ -26,6 +26,18 @@
         >
             @include('_layout.nav')
         </div>
+        {{-- Верхні віджети: зв'язок/бот (WS) --}}
+        <div class="container">
+            <div class="row mb-5">
+                <div class="col-12 col-lg-6">
+                    <div id="apteksCounterWidget"></div>
+                </div>
+                <div class="col-12 col-lg-6">
+                    <div id="apteksCounterChatBotWidget"></div>
+                </div>
+            </div>
+        </div>
+
         <main>
             @yield('content')
         </main>

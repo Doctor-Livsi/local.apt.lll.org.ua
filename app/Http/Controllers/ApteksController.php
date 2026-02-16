@@ -33,10 +33,13 @@ class ApteksController extends Controller
         return redirect()->route('apteks.status', ['status' => 'working']);
     }
 
-    public function details($id)
+    public function details(int $id)
     {
-        // TODO: Реалізувати отримання повної інформації по аптеці з MSSQL
-        return view('apteks.details', ['id' => $id]);
+        $apteka = Apteks::findOrFail($id);
+
+        return view('apteks.details', [
+            'apteka' => $apteka,
+        ]);
     }
 
     public function getConnectionData(Request $request)

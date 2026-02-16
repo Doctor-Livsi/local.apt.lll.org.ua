@@ -127,7 +127,7 @@ return [
     'authentication_column' => 'email',
     'authentication_column_name' => 'Email',
 
-    // Backpack assumes that your "database email column" for operations like Login and Register is called "email".
+    // Backpack assumes that your "database email column" for operations like login and Register is called "email".
     // If your database email column have a different name, you can configure it here. Eg: `user_mail`
     'email_column' => 'email',
 

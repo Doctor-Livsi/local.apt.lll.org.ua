@@ -80,7 +80,9 @@
                 <div class="col-6 ps-1 pe-1">
                     <ul class="list-unstyled">
                         <li>
-                            <a href="#">Themes</a>
+                            <button type="button" class="btn btn-foreground p-0" data-bs-toggle="modal" data-bs-target="#settings" id="settingsButton">
+                                Теми
+                            </button>
                         </li>
                         <li>
                             <a href="#">Language</a>

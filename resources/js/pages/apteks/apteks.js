@@ -1,5 +1,5 @@
 import { createApp } from 'vue'
-import ApteksTableStatus from "@/components/Apteks/ApteksTableStatus.vue";
+import ApteksTableStatus from "@/components/apteks/ApteksTableStatus.vue";
 
 document.addEventListener('DOMContentLoaded', () => {
     const el = document.getElementById('apteks-table-wrapper')

@@ -3,6 +3,7 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\ApteksController;
 use App\Http\Controllers\Api\ApteksDataController;
+use App\Http\Controllers\Api\ApteksCardController;
 
 /*
 |--------------------------------------------------------------------------
@@ -76,4 +77,19 @@ Route::middleware(['web', 'auth'])
             ->whereIn('status', ['working', 'projected', 'closed', 'connected'])
             ->whereIn('format', ['print', 'copy', 'pdf', 'excel', 'csv'])
             ->name('export');
+
+        /*
+        |--------------------------------------------------------------------------
+        | API для карточки аптеки (компоненти грузяться окремо)
+        |--------------------------------------------------------------------------
+        */
+        // БЛОКИ КАРТОЧКИ
+        Route::prefix('/{id}')
+            ->whereNumber('id')
+            ->group(function () {
+                Route::get('/passport', [ApteksCardController::class, 'passport'])->name('card.passport');
+                Route::get('/schedule/week/current', [ApteksCardController::class, 'currentWeek'])->name('card.currentWeek');
+                Route::get('/staff', [ApteksCardController::class, 'staff'])->name('card.staff');
+                Route::get('/providers', [ApteksCardController::class, 'providers'])->name('card.providers');
+            });
     });

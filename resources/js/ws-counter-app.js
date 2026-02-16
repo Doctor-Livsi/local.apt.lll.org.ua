@@ -1,5 +1,5 @@
 import { createApp } from 'vue'
-import ApteksCounterConnected from './components/Widget/ApteksCounterConnected.vue'
+import ApteksCounterWidget from './components/widgets/ApteksCounterWidget.vue'
 import './echo' // важно: подключаем Echo/Reverb
 
-createApp(ApteksCounterConnected).mount('#wsCounterApp')
+createApp(ApteksCounterWidget).mount('#wsCounterApp')

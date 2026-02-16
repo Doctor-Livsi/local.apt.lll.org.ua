@@ -2,28 +2,28 @@
 
 namespace App\Console\Commands;
 
-use App\Events\ApteksConnectionsCounterUpdated;
-use App\Models\Apteks\WS\ApteksConnectionsCount;
+use App\Events\ApteksChatBotStatsUpdated;
+use App\Models\Apteks\WS\ChatBotStatsCount;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Throwable;
 
-class MsSqlListenApteksCounter extends Command
+class MsSqlListenChatBotStats extends Command
 {
     /**
      * Назва artisan-команди
      */
-    protected $signature = 'mssql:listen-apteks-counter';
+    protected $signature = 'mssql:listen-chatbot-stats';
 
     /**
      * Опис команди
      */
-    protected $description = 'Слухає MSSQL Service Broker чергу та пушить оновлення лічильника аптек у WebSocket (Reverb)';
+    protected $description = 'Слухає MSSQL Service Broker чергу та пушить статистику ChatBot у WebSocket (Reverb)';
 
     public function handle(): int
     {
-        $queue = 'dbo.ApteksConnectionsQueue';
+        $queue = 'dbo.ChatBotStatsQueue';
 
         $this->info("MSSQL listener запущено: {$queue}");
         Log::info('MSSQL listener старт', ['queue' => $queue]);
@@ -47,8 +47,7 @@ class MsSqlListenApteksCounter extends Command
                 }
 
                 /**
-                 * Схлопуємо чергу:
-                 * якщо накопичилося багато повідомлень — відправляємо одне актуальне оновлення.
+                 * Схлопуємо чергу, щоб після простою не штовхати багато WS-подій
                  */
                 DB::connection('sqlsrv')->statement("
                     WHILE (1=1)
@@ -64,7 +63,7 @@ class MsSqlListenApteksCounter extends Command
                 $lastIdRaw = trim((string)($msg[0]->message_body ?? ''));
                 $lastId = ctype_digit($lastIdRaw) ? (int)$lastIdRaw : null;
 
-                Log::debug('MSSQL черга: отримано повідомлення', [
+                Log::debug('MSSQL черга ChatBot: отримано повідомлення', [
                     'queue' => $queue,
                     'message_body' => $lastIdRaw,
                     'parsed_id' => $lastId,
@@ -78,33 +77,46 @@ class MsSqlListenApteksCounter extends Command
                 $row = null;
 
                 if ($lastId) {
-                    $row = ApteksConnectionsCount::query()
+                    $row = ChatBotStatsCount::query()
                         ->whereNull('deleted_at')
                         ->where('id', $lastId)
                         ->first();
                 }
 
                 if (!$row) {
-                    $row = ApteksConnectionsCount::latestActive();
+                    $row = ChatBotStatsCount::latestActive();
                 }
 
                 if (!$row) {
                     $this->warn('Дані не знайдено (таблиця порожня або deleted_at не NULL)');
-                    Log::warning('MSSQL listener: дані не знайдено', ['id' => $lastId]);
+                    Log::warning('MSSQL listener ChatBot: дані не знайдено', ['id' => $lastId]);
                     continue;
                 }
 
                 /**
-                 * Публікуємо оновлення в WebSocket канал apteks.counter (Reverb)
+                 * Уніфікуємо payload під фронт:
+                 * in_work -> inWork
+                 * created_at -> updated_at
+                 */
+                $payload = [
+                    'queue' => (int)$row->queue,
+                    'inWork' => (int)$row->in_work,
+                    'total' => (int)$row->total,
+                    'employees' => (int)$row->employees,
+                    'updated_at' => (string)$row->created_at,
+                ];
+
+                /**
+                 * Публікуємо оновлення в WebSocket канал chatbot.stats (Reverb)
                  * Подія віддає формат { payload: {...} }
                  */
-                broadcast(new ApteksConnectionsCounterUpdated($row->toArray()));
+                broadcast(new ApteksChatBotStatsUpdated($payload));
 
-                $this->line('WS: apteks.counter updated (id=' . ($row->id ?? 'n/a') . ')');
-                Log::info('WS broadcast: apteks.counter updated', ['id' => $row->id ?? null]);
+                $this->line('WS: chatbot.stats updated (id=' . ($row->id ?? 'n/a') . ')');
+                Log::info('WS broadcast: chatbot.stats updated', ['id' => $row->id ?? null]);
             } catch (Throwable $e) {
-                $this->error('Помилка слухача MSSQL: ' . $e->getMessage());
-                Log::error('MSSQL listener error', [
+                $this->error('Помилка слухача MSSQL (ChatBot): ' . $e->getMessage());
+                Log::error('MSSQL listener ChatBot error', [
                     'message' => $e->getMessage(),
                     'trace' => $e->getTraceAsString(),
                 ]);

@@ -336,7 +336,7 @@ const initDataTable = async () => {
             bottomEnd: ['paging'],
         },
 
-        // Але самі buttons залишаємо, щоб тригерити програмно
+        // Buttons залишаємо, щоб тригерити програмно
         buttons: [
             { extend: 'print' },
             { extend: 'copy' },

@@ -17,9 +17,10 @@ export default defineConfig(({ mode }) => {
                 input: [
                     'resources/css/app.css',
                     'resources/js/app.js',
-                    'resources/js/pages/Login/login.js',
-                    'resources/js/pages/Apteks/apteks.js',
-                    'resources/js/components/Apteks/ApteksTable.vue', // Компонент для CRUD фото аптек
+                    'resources/js/pages/login/login.js',
+                    'resources/js/pages/apteks/apteks.js',
+                    'resources/js/components/apteks/details.js',
+                    'resources/js/components/apteks/ApteksTable.vue', // Компонент для CRUD фото аптек
                 ],
                 refresh: true,
             }),

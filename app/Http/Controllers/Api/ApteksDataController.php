@@ -59,32 +59,52 @@ class ApteksDataController extends Controller
             $query->where('brand_id', $brandId);
         }
 
-        // Search (global)
-        if (!empty($searchValue)) {
-            $trimmed = trim($searchValue);
+        $searchValue = trim((string) data_get($request->all(), 'search.value', ''));
 
-            $query->where(function ($q) use ($trimmed) {
-                // 1. Перевіряємо, чи починається з # і далі йде число
-                if (str_starts_with($trimmed, '#')) {
-                    $potentialId = trim(substr($trimmed, 1)); // все після #
+        if ($searchValue !== '') {
+            // Розбиваємо на токени за пробілами (можна ускладнити regex-ом, але цього вистачає)
+            $tokens = preg_split('/\s+/', $searchValue, -1, PREG_SPLIT_NO_EMPTY);
 
-                    if (ctype_digit($potentialId) && $potentialId !== '') {
-                        $id = (int) $potentialId;
-                        $q->where('id', '=', $id);           // ТІЛЬКИ точний пошук за id
-                        return;                              // виходимо — більше нічого не додаємо
+            $query->where(function ($q) use ($tokens) {
+
+                foreach ($tokens as $token) {
+                    $t = trim($token);
+
+                    if ($t === '') {
+                        continue;
                     }
-                }
 
-                // 2. Звичайний текстовий пошук (якщо не # або після # не число)
-                $q->where('name', 'like', "%{$trimmed}%")
-                    ->orWhere('apteka_ip', 'like', "%{$trimmed}%")
-                    ->orWhere('phone', 'like', "%{$trimmed}%")
-                    ->orWhere('address_full', 'like', "%{$trimmed}%");
+                    // 1) Якщо токен виглядає як "#123" — точний пошук по id (і цей токен має "знайтись")
+                    if (str_starts_with($t, '#')) {
+                        $potentialId = trim(substr($t, 1));
 
-                // Опціонально: якщо ввели просто число без # — все одно шукаємо як текст
-                // (можна прибрати, якщо хочете суворіше правило)
-                if (ctype_digit($trimmed)) {
-                    $q->orWhere('id', '=', (int) $trimmed);
+                        if ($potentialId !== '' && ctype_digit($potentialId)) {
+                            $q->where('id', '=', (int) $potentialId);
+                            continue; // переходимо до наступного токена
+                        }
+
+                        // Якщо після # не число — трактуємо як звичайний текст
+                        $t = ltrim($t, '#');
+                        if ($t === '') {
+                            continue;
+                        }
+                    }
+
+                    // 2) Звичайний токен: він має знайтись ХОЧА Б В ОДНОМУ полі
+                    $like = '%' . str_replace(['\\', '%', '_'], ['\\\\', '\\%', '\\_'], $t) . '%';
+
+                    $q->where(function ($qq) use ($like, $t) {
+                        $qq->where('name', 'like', $like)
+                            ->orWhere('name_full', 'like', $like)       // якщо є поле name_full — залишаємо
+                            ->orWhere('apteka_ip', 'like', $like)
+                            ->orWhere('phone', 'like', $like)
+                            ->orWhere('address_full', 'like', $like);
+
+                        // 3) Якщо токен — число, додатково точний пошук по id
+                        if (ctype_digit($t)) {
+                            $qq->orWhere('id', '=', (int) $t);
+                        }
+                    });
                 }
             });
         }
